@@ -14,7 +14,7 @@ Tanto las varables estaticas como las variables globales si no se inicializan ex
 Varaibles locales: Solo existen dentro de esa función. Se crean cuando entras en la función y se destruyen cuando sales. Si no las inicializas, su contenido será indefinido (lo que haya en memoria, literalmente basura).
 
 🔹 ¿Qué es un File Descriptor?
-Un file descriptor (descriptor de archivo) es un número entero que el sistema operativo asigna para identificar un archivo abierto, un socket (comunicación por red), un pipe (comunicación entre procesos), o incluso la entrada/salida estándar (la pantalla o el teclado).
+Un file descriptor (descriptor de archivo) es un número entero que el sistema operativo asigna para identificar un archivo abierto, un socket (comunicación por red), un pipe (comunicación entre procesos), o incluso la entrada/salida estándar (la pantalla o el teclado). Basicamente, todo puede ser un descriptor de archivo.
 ⚠️ No es el archivo en sí, ni los datos. Es un número que representa ese archivo en el sistema.
 En C y en la mayoria de sistemas de Unix hay 3 File Descriptors por defecto:
 - 0: stdin - Entrada estándar (teclado) // scanf, read(0, ...)
@@ -32,4 +32,50 @@ Lo que pasa internamente cuando usas por ejemplo open():
 3. En tu programa, se agrega un nuevo índice en tu File Descriptor Table (por ejemplo, el número 3).
 4. Cuando usas write(fd, ...), se sigue esa cadena para encontrar el archivo real y escribir en él.
 
-- Open() and Read() functions
+🔹 Open() and Read() functions
+Estas funciones forman parte de la API del sistema Unix/Linux. Sirven para abrir y leer archivos a bajo nivel (más directo que fopen() y fread() de stdio).
+No forman parte del lenguaje C estándar, pero sí están disponibles en sistemas Unix/Linux.
+Se llaman "llamadas al sistema" (system calls), y permiten que tu programa hable directamente con el sistema operativo.
+🔧 Están definidas en cabeceras como:
+#include <fcntl.h>    // para open()
+#include <unistd.h>   // para read(), write(), close()
+
+OPEN: 
+int open(const char *pathname, int flags); // int fd = open("archivo.txt", O_RDONLY);
+Devuelve un file descriptor (fd), un número que representa el archivo. Si falla, devuelve -1.
+Cuando usas la función open(), no solo le pasas el nombre del archivo, también debes decirle cómo lo quieres abrir:
+Todo esto se indica usando banderas, que son constantes con nombres en mayúsculas.
+Flag | Significado | Ejemplo práctico
+- O_RDONLY | Abrir solo para leer | Leer un archivo de texto
+- O_WRONLY | Abrir solo para escribir | Escribir logs o resultados
+- O_RDWR | Abrir para leer y escribir | Leer/modificar el contenido
+- O_CREAT | Crear el archivo si no existe | Crear un archivo nuevo si aún no está
+- O_EXCL | Solo crear el archivo si no existe ya | Útil junto con O_CREAT para evitar sobrescribir
+Se combinan con el operador | (OR bit a bit), así: int fd = open("archivo.txt", O_WRONLY | O_CREAT, 0644);
+
+READ: 
+#include <unistd.h>
+ssize_t read(int fd, void *buf, size_t count);
+- fd: El file descriptor, o sea, el "número" que representa el archivo abierto con open()
+- buf: puntero al espacio en memoria donde se guardarán los datos leídos
+- count: cuántos bytes leer.
+
+char buffer[100];
+int bytes_leidos = read(fd, buffer, 100);
+Esta función intenta leer hasta 100 bytes desde el archivo asociado al file descriptor fd, y los guarda en el array buffer.
+Devuelve el número real de bytes que se leyeron. Esto es importante.
+Si el archivo tiene 50 caracteres, read() leerá solo 50.
+Si hay un error, devuelve -1.
+Si se llega al final del archivo, devuelve 0.
+
+BUFFER_SIZE es simplemente una constante que define cuántos bytes vas a leer de golpe en cada llamada a read().
+
+
+
+
+
+
+
+
+
+
