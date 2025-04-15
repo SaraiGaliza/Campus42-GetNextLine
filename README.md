@@ -68,8 +68,9 @@ Si el archivo tiene 50 caracteres, read() leerá solo 50.
 Si hay un error, devuelve -1.
 Si se llega al final del archivo, devuelve 0.
 
-BUFFER_SIZE es simplemente una constante que define cuántos bytes vas a leer de golpe en cada llamada a read().
-
+BUFFER_SIZE es simplemente una constante que define cuántos bytes vas a leer de golpe en cada llamada a read(). -D BUFFER_SIZE=xx?
+La opción -D es una flag del compilador gcc que significa: Define una macro desde la línea de comandos. // Es como si escribieras esto directamente en tu código: #define BUFFER_SIZE 42
+Ejemplo de compilación: cc -Wall -Wextra -Werror -D BUFFER_SIZE=64 get_next_line.c main.c
 
 
 
