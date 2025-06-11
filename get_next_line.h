@@ -22,7 +22,7 @@
 # include <unistd.h>  // read()
 # include <stdlib.h>  // malloc(), free()
 # include <fcntl.h>   // open(), flags como O_RDONLY
-# include <stdio.h>   // opcional: para printf o pruebas
+// # include <stdio.h>   // opcional: para printf o pruebas
 
 // Declaración de la función principal
 char	*get_next_line(int fd);
