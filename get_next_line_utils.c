@@ -11,3 +11,83 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t  ft_strlen(const  char *s)
+{
+  size_t  i;
+
+  i = 0;
+  while (s && s[i])
+    i++;
+  return (i);
+}
+
+char  *ft_strchr(const char *s, int c)
+{
+  if (!s)
+    return (NULL);
+  while (*s)
+    {
+      if (*s == (char)c)
+        return (char *)s;
+      s++;
+    }
+  return (NULL);
+}
+
+static size_t	ft_static_strlcpy(char *dst, const char *src, size_t dstsize)
+{
+	size_t	s_len;
+	size_t	i;
+
+	s_len = 0;
+	while (src[s_len] != '\0')
+		s_len++;
+	if (dstsize == 0)
+		return (s_len);
+	i = 0;
+	while (i < (dstsize - 1) && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (s_len);
+}
+
+static size_t	ft_static_strlcat(char *dst, const char *src, size_t dstsize)
+{
+	size_t	len_dst;
+	size_t	len_src;
+	size_t	i;
+
+	len_dst = ft_static_strlen(dst);
+	len_src = ft_static_strlen(src);
+	if (len_dst >= dstsize)
+		return (dstsize + len_src);
+	i = 0;
+	while (src[i] != '\0' && (len_dst + i) < (dstsize - 1))
+	{
+		dst[len_dst + i] = src[i];
+		i++;
+	}
+	dst[len_dst + i] = '\0';
+	return (len_dst + len_src);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*new_s;
+	size_t	len;
+
+	if (!s1 || !s2)
+		return (NULL);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	new_s = (char *)malloc((len + 1) * sizeof(char));
+	if (!new_s)
+		return (NULL);
+	ft_static_strlcpy(new_s, s1, len + 1);
+	ft_static_strlcat(new_s, s2, len + 1);
+	return (new_s);
+}
+
