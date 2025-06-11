@@ -61,8 +61,8 @@ static size_t	ft_static_strlcat(char *dst, const char *src, size_t dstsize)
 	size_t	len_src;
 	size_t	i;
 
-	len_dst = ft_static_strlen(dst);
-	len_src = ft_static_strlen(src);
+	len_dst = ft_strlen(dst);
+	len_src = ft_strlen(src);
 	if (len_dst >= dstsize)
 		return (dstsize + len_src);
 	i = 0;
@@ -75,7 +75,7 @@ static size_t	ft_static_strlcat(char *dst, const char *src, size_t dstsize)
 	return (len_dst + len_src);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	char	*new_s;
 	size_t	len;
@@ -85,9 +85,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	len = ft_strlen(s1) + ft_strlen(s2);
 	new_s = (char *)malloc((len + 1) * sizeof(char));
 	if (!new_s)
+	{
+		free(s1);
 		return (NULL);
+	}
 	ft_static_strlcpy(new_s, s1, len + 1);
 	ft_static_strlcat(new_s, s2, len + 1);
+	free(s1);
 	return (new_s);
 }
 
