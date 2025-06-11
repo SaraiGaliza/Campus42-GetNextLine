@@ -21,10 +21,13 @@
 // Librerías necesarias
 # include <unistd.h>  // read()
 # include <stdlib.h>  // malloc(), free()
-# include <fcntl.h>   // open(), flags como O_RDONLY
-// # include <stdio.h>   // opcional: para printf o pruebas
+// # include <fcntl.h>  // open(), flags como O_RDONLY (opcional para el main)
+// # include <stdio.h>  // para printf o pruebas (opcional para el main)
 
 // Declaración de la función principal
 char	*get_next_line(int fd);
+char	*ft_strchr(const char *s, int c);
+char  *ft_strjoin(char *s1, const char *s2);
+size_t	ft_strlen(const char *s)
 
 #endif
