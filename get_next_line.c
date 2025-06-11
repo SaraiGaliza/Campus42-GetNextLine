@@ -27,13 +27,13 @@ static  char  *extract_line(char *rem)
     i++;
   if (rem[i] == '\n')
     i++;
-  line = malloc(i + 1) * sizeof(char);
+  line = malloc((i + 1) * sizeof *line);
   if (!line)
     return (NULL);
 i = 0;
   while (rem[i] && rem[i] != '\0')
     {
-      line{i] = rem[i];
+      line[i] = rem[i];
       i++;
     }
   line[i] = '\0';
@@ -82,7 +82,7 @@ char *get_next_line(int fd)
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
     br = 1;
-    while (!ft_strchr(rem, '\n') && br > 0)
+    while (!(rem && ft_strchr(rem, '\n')) && br > 0)
     {
         br = read(fd, buffer, BUFFER_SIZE);
         if (br < 0)
