@@ -13,21 +13,21 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-// Si no se define externamente, define BUFFER_SIZE como 42
+// Si no se define externamente desde la línea de comandos (con la flag -D BUFFER_SIZE=XX) define BUFFER_SIZE como 42
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
-// Librerías necesarias
+// Librerías
 # include <unistd.h>  // read()
 # include <stdlib.h>  // malloc(), free()
 // # include <fcntl.h>  // open(), flags como O_RDONLY (opcional para el main)
 // # include <stdio.h>  // para printf o pruebas (opcional para el main)
 
-// Declaración de la función principal
+// Declaración de laa funciónes principales
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
 char  *ft_strjoin(char *s1, const char *s2);
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *s);
 
 #endif
