@@ -96,17 +96,17 @@ char *get_next_line(int fd)
     ssize_t     bytes_read; // Almacena el nº de bytes leídos por read. Si =0 es EOF, si es <0 es error. Usamos 'ssize_t' para representar también -1.
 
     if (fd < 0 || BUFFER_SIZE <= 0) // Manejo de errores; comprobamos que el file descriptor y el tamaño de buffer sean válidos.
-        return (NULL);
+        return (free(store), store = NULL, (char *)NULL);
     bytes_read = 1; // Iniciamos bytes_read en 1 para entrar en el bucle.
     while (!(store && ft_strchr(store, '\n')) && bytes_read > 0) // Mientras no haya un '\n' en store y no hayamos llegado a EOF (bytes_read > 0) entramos al bucle.
     {
         bytes_read = read(fd, read_buffer, BUFFER_SIZE); // Leemos hasta hasta BUFFER_SIZE bytes y lo asignamos a bytes_read.
         if (bytes_read < 0) // Manejo de errores; si la lectura falla se retorna null.
-            return (NULL);
+            return (free(store), store = NULL, (char *)NULL);
         read_buffer[bytes_read] = '\0'; // Convertimos el buffer en un array añadiendo el terminador nulo al final.
         store = ft_strjoin(store, read_buffer); // Concatenamos el resutlado de buffer con lo que había en 'store' usando ft_strjoin.
         if (!store) // Manejo de errores; si hay algun error con store devolvemos null.
-            return (NULL);
+            return (free(store), store = NULL, (char *)NULL);
     }
     if (!store || !*store) // Si 'store' está vacío o es NULL, no queda nada por leer (EOF).
         return (free(store), store = NULL, (char *)NULL); // Liberamos memoria y devolvemos NULL para indicar EOF.
