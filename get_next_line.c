@@ -36,7 +36,10 @@ static  char  *extract_line(char *store)
     return (NULL);
 j = 0; // Inicializamos a 0 para comenzar a copiar caracteres.
   while (j < i) // Copiamos 'i' caracteres de 'store' a 'line'.
-      line[j++] = store[j];
+   {
+      line[j] = store[j];
+      j++;
+   }
   line[j] = '\0'; // Añadimos el carácter nulo al final para cerrar correctamente la cadena.
   return (line); // Devolvemos la variable 'line', que contiene la nueva cadena que acabamos de extraer.
 }
