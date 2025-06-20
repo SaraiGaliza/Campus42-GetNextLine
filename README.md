@@ -72,8 +72,52 @@ BUFFER_SIZE es simplemente una constante que define cuántos bytes vas a leer de
 La opción -D es una flag del compilador gcc que significa: Define una macro desde la línea de comandos. // Es como si escribieras esto directamente en tu código: #define BUFFER_SIZE 42
 Ejemplo de compilación: cc -Wall -Wextra -Werror -D BUFFER_SIZE=64 get_next_line.c main.c
 
+___________
 
+PASOS IMPORTANTES PARA LA CORRECCION:
 
+- Comprobar el nombre de los archivos.
+- Comprobar el archivo .h y que está la macro BUFFER_SIZE
+- Pasar la norminette.
+- Revisar que no haya fugas de memoria.
+
+PRUEBAS BÁSICAS:
+Con BUFF_SIZE fijado a 8, compile un programa de prueba que lea desde la entrada estándar usando get_next_line. Realice al menos las siguientes pruebas:
+- Leer y devolver una línea de 8 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
+
+A continuación, añada un open(argv[1]) en main y realice:
+- Leer y devolver una línea de 8 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde un fichero.
+
+PRUEBAS INTERMEDIAS:
+Con BUFF_SIZE fijado a 16, realice las mismas pruebas que en la sección anterior:
+- Leer y devolver una línea de 16 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver dos líneas de 16 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver cualquier número de líneas de 16 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver una línea de 16 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver dos líneas de 16 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver cualquier número de líneas de 16 caracteres (incluyendo \n) desde la entrada estándar.
+
+PRUEBAS AVANZADAS:
+Con BUFF_SIZE fijado a 4, compruebe:
+- Leer y devolver una línea de 4 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver dos líneas de 4 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver cualquier número de líneas de 4 caracteres (incluyendo \n) desde un fichero.
+- Leer y devolver una línea de 4 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver dos líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver cualquier número de líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
+- Leer y devolver una línea de 4 caracteres sin \n desde un fichero.
+- Leer y devolver una línea de 8 caracteres sin \n desde un fichero.
+- Leer y devolver una línea de 16 caracteres sin \n desde un fichero. (Recordatorio: el fin de fichero debe comportarse como fin de línea para get_next_line.)
+- Leer y devolver una línea vacía desde un fichero.
+
+GESTION DE ERRORES:
+Realice AL MENOS las siguientes pruebas para evaluar la gestión de errores:
+- Pasar un descriptor de archivo arbitrario a get_next_line en el que no sea posible leer (por ejemplo, 42). La función debe devolver -1.
+- Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué?
 
 
 
