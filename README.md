@@ -79,7 +79,7 @@ PASOS IMPORTANTES PARA LA CORRECCION:
 - Comprobar el nombre de los archivos.
 - Comprobar el archivo .h y que está la macro BUFFER_SIZE
 - Pasar la norminette.
-- Revisar que no haya fugas de memoria.
+- Revisar que no haya fugas de memoria. (leaks check??)
 
 PRUEBAS BÁSICAS:
 Con BUFF_SIZE fijado a 8, compile un programa de prueba que lea desde la entrada estándar usando get_next_line. Realice al menos las siguientes pruebas:
