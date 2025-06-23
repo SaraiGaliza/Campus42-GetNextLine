@@ -66,27 +66,26 @@ Update_store: Actualiza el contenido de 'store' tras extraer una línea completa
 */
 static char	*update_store(char *store)
 {
-    size_t	i;         /* posición de '\n' */
-    size_t	len;       /* longitud del remanente */
-    char	*new_store;/* buffer para el remanente */
+    size_t	i; // Índice donde termina la línea extraída (posición del '\n' o fin de cadena).
+    size_t	len; // Longitud del contenido que queda tras la línea extraída.
+    char	*new_store; // Puntero a la nueva cadena que contendrá ese contenido sobrante.
 
-    i = 0;
-    /* Encontrar '\n' */
-    while (store[i] && store[i] != '\n')
+    i = 0; // Inicializamos a 0 para comenzar a recorrer la cadena 'store'. 
+    while (store[i] && store[i] != '\n') // Recorremos hasta encontrar '\n' o el final de la cadena.
         i++;
-    if (!store[i])
-        return (free_buf(store));  /* no hay '\n', liberar todo */
-    i++;  /* avanzar después del '\n' */
-    /* Calcular cuántos caracteres quedan */
-    len = ft_strlen(store + i);
-    /* Reservar nuevo buffer */
-    new_store = malloc(len + 1);
-    if (!new_store)
+    if (!store[i]) // Si llegamos al fin sin encontrar '\n' liberamos todo y devolvemos NULL.
         return (free_buf(store));
-    /* Copiar remanente */
-    ft_strlcpy(new_store, store + i, len + 1);
-    free(store);
-    return (new_store);
+    i++; // Avanzamos un carácter más para no copiar el salto de línea en el nuevo buffer.
+    len = ft_strlen(store + i);
+    new_store = malloc(len + 1); // Reservamos memoria para la nueva cadena que vamos a devolver + el 
+    if (!new_store) // Manejo de errores; si la asignacion de memoria falla liberamos store y se retorna null.
+        return (free_buf(store));
+    len = 0; // Inicializamos a 0 para comenzar a copiar caracteres.
+    while (store[i + len]) // Iteramos en el bucle mientras no llegemos al final de la cadena. Copiando i + len caracteres de store a new_store.
+        new_store[len++] = store[i + len];
+    new_store[len] = '\0'; // Añadimos el carácter nulo al final para cerrar correctamente la cadena.    
+    free(store); // Liberamos 'store' porque ya no nos hace falta.
+    return (new_store); // Devolvemos la variable 'new_store' con la nueva cadena.
 }
 
 /* 
@@ -95,7 +94,6 @@ Get_next_line:
  - Devuelve una cadena dinámica con la línea (incluyendo '\n' si existe).
  - Devuelve NULL al llegar al EOF o en caso de error.
  */
-
 char	*get_next_line(int fd)
 {
 	static char	*store; // Puntero estático (conserva su valor entre llamadas). Se almacena todo lo que se ha leído pero que aún no se ha devuelto.
