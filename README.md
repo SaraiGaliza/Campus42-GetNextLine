@@ -117,7 +117,12 @@ Con BUFF_SIZE fijado a 4, compruebe:
 GESTION DE ERRORES:
 Realice AL MENOS las siguientes pruebas para evaluar la gestión de errores:
 - Pasar un descriptor de archivo arbitrario a get_next_line en el que no sea posible leer (por ejemplo, 42). La función debe devolver -1.
-- Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué? Si defines algo como char buf[10000000]; dentro de la función, eso ya son 10 MB en la pila y supera el límite antes incluso de empezar. intenta reservar más de 10 MB en la pila de tu hilo principal, cuyo límite por defecto es 8 MB, y por eso explota con un “stack overflow”. ese array se aloja en la pila (stack) de tu función. Cada llamada a get_next_line reserva esos megas en la pila, y como el límite por defecto es 8 MB (en Linux suele ser eso), al pedir 10 MB la pila se “desborda” y el sistema no puede ampliar más el segmento de stack, provocando el SIGSEGV que ves con Valgrind.
+- Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué? Si defines algo como char buf[10000000]; dentro de la función, eso ya son 10 MB en la pila y supera el límite antes incluso de empezar. intenta reservar más de 10 MB en la pila de tu hilo principal, cuyo límite por defecto es 8 MB, y por eso explota con un “stack overflow”. ese array se aloja en la pila (stack) de tu función. Cada llamada a get_next_line reserva esos megas en la pila, y como el límite por defecto es 8 MB (en Linux suele ser eso), al pedir 10 MB la pila se “desborda” y el sistema no puede ampliar más el segmento de stack, provocando el SIGSEGV que ves con Valgrind. En cambio, cuando usas ""static char read_buffer[BUFFER_SIZE + 1];""
+ese array deja de ser una variable local “sobre la marcha” y pasa a formar parte de tu sección de datos estáticos (la BSS, o .data si lo inicializas). Eso significa:
+No crece ni encoge con las llamadas a la función. Sólo hay una única copia de read_buffer durante toda la ejecución.
+Se reserva cuando el programa se carga en memoria, dentro de tu segmento de datos estáticos, cuyo tamaño no está limitado a 8 MB como el stack. Suele gestionarse contra toda la memoria virtual disponible, de modo que dos o tres decenas de megas aquí no dan problema (mientras tengas RAM/paginación suficiente).
+
+
   
 
 
