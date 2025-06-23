@@ -100,4 +100,30 @@ static char	*update_store(char *store)
 char	*get_next_line(int fd)
 {
     static char	*store;                      /* datos pendientes */
-    static char
+    static char	read_buffer[BUFFER_SIZE + 1];/* buffer para read() */
+    char		*returned_line;
+    ssize_t		bytes_read;
+
+    /* Validar args */
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (store = free_buf(store));
+    bytes_read = 1;
+    /* Leer hasta hallar '\n' o llegar a EOF */
+    while (!(store && ft_strchr(store, '\n')) && bytes_read > 0)
+    {
+        bytes_read = read(fd, read_buffer, BUFFER_SIZE);
+        if (bytes_read < 0)
+            return (store = free_buf(store));
+        read_buffer[bytes_read] = '\0';
+        store = ft_strjoin(store, read_buffer);
+        if (!store)
+            return (store = free_buf(store));
+    }
+    /* Si no hay datos, EOF limpio */
+    if (!store || !*store)
+        return (store = free_buf(store));
+    /* Extraer línea y actualizar store */
+    returned_line = extract_line(store);
+    store = update_store(store);
+    return (returned_line);
+}
