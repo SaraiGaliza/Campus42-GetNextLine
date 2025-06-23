@@ -6,7 +6,7 @@
 /*   By: sarrodri <sarrodri@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 16:18:56 by sarrodri          #+#    #+#             */
-/*   Updated: 2025/06/18 17:42:59 by sarrodri         ###   ########.fr       */
+/*   Updated: 2025/06/23 13:27:07 by sarrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char	*update_store(char *store)
 char	*get_next_line(int fd)
 {
 	static char	*store;
-	char		read_buffer[BUFFER_SIZE + 1];
+	static char	read_buffer[BUFFER_SIZE + 1];
 	char		*returned_line;
 	ssize_t		bytes_read;
 
