@@ -79,7 +79,9 @@ PASOS IMPORTANTES PARA LA CORRECCION:
 - Comprobar el archivo .h y que está la macro BUFFER_SIZE
 - Pasar la norminette.
 - Compilar proyecto: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=8 get_next_line.c get_next_line_utils.c main.c -o test_bs8_gnl
-- Revisar que no haya fugas de memoria: valgrind --leak-check=full --show-leak-kinds=all ./test_bs8_gnl archivo_pruebas.txt
+- Revisar que no haya fugas de memoria:
+        Op 1: valgrind --leak-check=full --show-leak-kinds=all ./test_bs8_gnl archivo_pruebas.txt
+        Op 2: valgrind ./test_bs8_gnl archivo_pruebas.txt
 
 Con BUFF_SIZE fijado a 8: 
 - Leer y devolver una línea de 8 caracteres (incluyendo \n) desde la entrada estándar.
@@ -138,6 +140,7 @@ COMANDOS para fichero
             #nwxfghyfghz
             #
             #4
+      yes B | head -c 9999 | tr '\n' ' ' > test2.txt
 COMANDOS sin \n (lo mismo pero con echo -n en lugar de -e)
       echo -n "1234567\n" | ./test_gnl 
             #1234567EOF
