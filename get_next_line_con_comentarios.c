@@ -95,33 +95,30 @@ Get_next_line:
  - Devuelve una cadena dinámica con la línea (incluyendo '\n' si existe).
  - Devuelve NULL al llegar al EOF o en caso de error.
  */
+
 char	*get_next_line(int fd)
 {
-    static char	*store;                      /* datos pendientes */
-    static char	read_buffer[BUFFER_SIZE + 1];/* buffer para read() */
-    char		*returned_line;
-    ssize_t		bytes_read;
+	static char	*store; // Puntero estático (conserva su valor entre llamadas). Se almacena todo lo que se ha leído pero que aún no se ha devuelto.
+	static char	read_buffer[BUFFER_SIZE + 1]; // Buffer temporal donde 'read' deposita hasta BUFFER_SIZE bytes. El +1 es para añadir el '\0' al final y que sea un array.
+	char		*returned_line; // Puntero a la línea final que se devuelve.
+	ssize_t		bytes_read; // Almacena el nº de bytes leídos por read. Si =0 es EOF, si es <0 es error. Usamos 'ssize_t' para representar también -1.
 
-    /* Validar args */
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return (store = free_buf(store));
-    bytes_read = 1;
-    /* Leer hasta hallar '\n' o llegar a EOF */
-    while (!(store && ft_strchr(store, '\n')) && bytes_read > 0)
-    {
-        bytes_read = read(fd, read_buffer, BUFFER_SIZE);
-        if (bytes_read < 0)
-            return (store = free_buf(store));
-        read_buffer[bytes_read] = '\0';
-        store = ft_strjoin(store, read_buffer);
-        if (!store)
-            return (store = free_buf(store));
-    }
-    /* Si no hay datos, EOF limpio */
-    if (!store || !*store)
-        return (store = free_buf(store));
-    /* Extraer línea y actualizar store */
-    returned_line = extract_line(store);
-    store = update_store(store);
-    return (returned_line);
+	if (fd < 0 || BUFFER_SIZE <= 0) // Manejo de errores; comprobamos que el file descriptor y el tamaño de buffer sean válidos.
+		return (store = free_buf(store));
+	bytes_read = 1; // Iniciamos bytes_read en 1 para entrar en el bucle.
+	while (!(store && ft_strchr(store, '\n')) && bytes_read > 0) // Mientras no haya un '\n' en store y no hayamos llegado a EOF (bytes_read > 0) entramos al bucle.
+	{
+		bytes_read = read(fd, read_buffer, BUFFER_SIZE); // Leemos hasta hasta BUFFER_SIZE bytes y lo asignamos a bytes_read.
+		if (bytes_read < 0)  // Manejo de errores; si la lectura falla se retorna null.
+			return (store = free_buf(store));
+		read_buffer[bytes_read] = '\0'; // Convertimos el buffer en un array añadiendo el terminador nulo al final.
+		store = ft_strjoin(store, read_buffer); // Concatenamos el resutlado de buffer con lo que había en 'store' usando ft_strjoin.
+		if (!store) // Manejo de errores; si hay algun error con store devolvemos null.
+			return (store = free_buf(store));
+	}
+	if (!store || !*store) // Si 'store' está vacío o es NULL, no queda nada por leer (EOF).
+		return (store = free_buf(store)); // Liberamos memoria y devolvemos NULL para indicar EOF.
+	returned_line = extract_line(store); // Extraemos la línea completa (hasta '\n' o final) en 'returned_line'.
+	store = update_store(store); // Actualizamos 'store' con lo que quede tras la línea extraída.
+	return (returned_line); // Devolvemos la línea al usuario; él debe liberarla con free().
 }
