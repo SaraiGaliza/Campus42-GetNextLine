@@ -75,35 +75,22 @@ Ejemplo de compilación: cc -Wall -Wextra -Werror -D BUFFER_SIZE=64 get_next_lin
 ___________
 
 PASOS IMPORTANTES PARA LA CORRECCION:
-
 - Comprobar el nombre de los archivos.
 - Comprobar el archivo .h y que está la macro BUFFER_SIZE
 - Pasar la norminette.
-- Compilar proyecto: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=8 get_next_line.c get_next_line_utils.c main.c -o test_gnl
-- Revisar que no haya fugas de memoria: valgrind --leak-check=full --show-leak-kinds=all ./test_gnl fichero_de_prueba.txt
+- Compilar proyecto: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=8 get_next_line.c get_next_line_utils.c main.c -o test_bs8_gnl
+- Revisar que no haya fugas de memoria: valgrind --leak-check=full --show-leak-kinds=all ./test_bs8_gnl archivo_pruebas.txt
 
-
-PRUEBAS BÁSICAS:
-Con BUFF_SIZE fijado a 8, compile un programa de prueba que lea desde la entrada estándar usando get_next_line. Realice al menos las siguientes pruebas:
+Con BUFF_SIZE fijado a 8: 
 - Leer y devolver una línea de 8 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
-      echo -e "1234567\n" | ./test_gnl #envía 1234567\n (La izquierda y se pasa como entrada stdin a lo que esta en la derecha).
-      echo -n "1234567\n" | ./test_gnl #envía 1234567EOF
-      echo -e "1234\nwxyz\n" | ./test_gnl #envía 2 líneas 1234 y wxyz
-      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" | ./test_gnl #envía 6 (una solo es salto de línea): 1234 wxyz líneas líneas (salto) y 4.
-
-A continuación, añada un open(argv[1]) en main y realice:
 - Leer y devolver una línea de 8 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde un fichero.
-      echo -e "1234567\n" > test.txt
-      ./test_gnl test.txt  
-      echo -e "1234\nwxyz\n" > test.txt
-      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" > test.txt
 
-PRUEBAS INTERMEDIAS:
-Con BUFF_SIZE fijado a 16, realice las mismas pruebas que en la sección anterior:
+Con BUFF_SIZE fijado a 16, realice las mismas pruebas que en la sección anterior: 
+COMPILACION: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=16 get_next_line.c get_next_line_utils.c main.c -o test_bs16_gnl
 - Leer y devolver una línea de 16 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver dos líneas de 16 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver cualquier número de líneas de 16 caracteres (incluyendo \n) desde un fichero.
@@ -111,8 +98,8 @@ Con BUFF_SIZE fijado a 16, realice las mismas pruebas que en la sección anterio
 - Leer y devolver dos líneas de 16 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver cualquier número de líneas de 16 caracteres (incluyendo \n) desde la entrada estándar.
 
-PRUEBAS AVANZADAS:
-Con BUFF_SIZE fijado a 4, compruebe:
+Con BUFF_SIZE fijado a 4:
+COMPILACION: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=16 get_next_line.c get_next_line_utils.c main.c -o test_bs4_gnl
 - Leer y devolver una línea de 4 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver dos líneas de 4 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver cualquier número de líneas de 4 caracteres (incluyendo \n) desde un fichero.
@@ -120,14 +107,47 @@ Con BUFF_SIZE fijado a 4, compruebe:
 - Leer y devolver dos líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver cualquier número de líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver una línea de 4 caracteres sin \n desde un fichero.
-     Lo mismo pero es con echo -n en lugar de echo -e
 - Leer y devolver una línea de 8 caracteres sin \n desde un fichero.
 - Leer y devolver una línea de 16 caracteres sin \n desde un fichero. (Recordatorio: el fin de fichero debe comportarse como fin de línea para get_next_line.)
 - Leer y devolver una línea vacía desde un fichero.
 
+COMANDOS para entrada estandar
+      echo -e "1234567\n" | ./test_gnl 
+            #1234567\n
+      echo -e "1234\nwxyz\n" | ./test_gnl 
+            #1234
+            #wxyz
+      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" | ./test_gnl 
+            #1234
+            #wxyz
+            #nwxfghyfghz
+            #
+            #4
+COMANDOS para fichero
+      echo -e "1234567\n" > test1linea.txt
+      ./test_gnl test1linea.txt
+            #1234567\n
+      echo -e "1234\nwxyz\n" > test2lineas.txt
+      ./test_gnl test2lineas.txt
+            #1234
+            #wxyz
+      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" > testmultipleslineas.txt
+      ./test_gnl testmultipleslineas.txt
+            #1234
+            #wxyz
+            #nwxfghyfghz
+            #
+            #4
+COMANDOS sin \n (lo mismo pero con echo -n en lugar de -e)
+      echo -n "1234567\n" | ./test_gnl 
+            #1234567EOF
+      echo -n "1234567\n" > test1linea.txt
+      ./test_gnl test1linea.txt
+            #1234567EOF
+
 GESTION DE ERRORES:
-Realice AL MENOS las siguientes pruebas para evaluar la gestión de errores:
 - Pasar un descriptor de archivo arbitrario a get_next_line en el que no sea posible leer (por ejemplo, 42). La función debe devolver -1.
+  
 - Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué? Si defines algo como char buf[10000000]; dentro de la función, eso ya son 10 MB en la pila y supera el límite antes incluso de empezar. intenta reservar más de 10 MB en la pila de tu hilo principal, cuyo límite por defecto es 8 MB, y por eso explota con un “stack overflow”. ese array se aloja en la pila (stack) de tu función. Cada llamada a get_next_line reserva esos megas en la pila, y como el límite por defecto es 8 MB (en Linux suele ser eso), al pedir 10 MB la pila se “desborda” y el sistema no puede ampliar más el segmento de stack, provocando el SIGSEGV que ves con Valgrind. En cambio, cuando usas ""static char read_buffer[BUFFER_SIZE + 1];""
 ese array deja de ser una variable local “sobre la marcha” y pasa a formar parte de tu sección de datos estáticos (la BSS, o .data si lo inicializas). Eso significa:
 No crece ni encoge con las llamadas a la función. Sólo hay una única copia de read_buffer durante toda la ejecución.
