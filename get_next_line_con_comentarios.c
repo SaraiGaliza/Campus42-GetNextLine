@@ -24,47 +24,46 @@ static char	*free_buf(char *ptr)
 }
 
 /*
- * extract_line:
- *   Extrae la siguiente línea de 'store', incluyendo '\n' si está presente.
- *   - Cuenta caracteres hasta '\n' o hasta el fin de la cadena.
- *   - Reserva memoria para la línea y copia los caracteres.
- *   - Devuelve un puntero dinámico a la línea, o NULL si falla malloc.
- */
+Extract_line: Extrae la siguiente línea de store (incluye '\n' si existe).
+ - Recorre la cadena hasta encontrar '\n' o el final.
+ - Reserva memoria para la línea extraída.
+ - Copia carácter a carácter hasta el final de la línea.
+ - Devuelve un puntero dinámico que contiene la línea.
+*/
 static char	*extract_line(char *store)
 {
-    size_t	i;       /* índice para medir longitud de línea */
-    size_t	j;       /* índice para copiar caracteres */
-    char	*line;   /* buffer donde se guarda la línea */
+    size_t	i; // Índice para recorrer 'store' y contar cuántos caracteres hay hasta '\n' o el final de la cadena.
+    size_t	j; // Índice para copiar los caracteres de 'store' a 'line' (la cadena que vamos a devolver con la funcion).
+    char	*line; // Puntero que almacenará la línea extraída.
 
-    i = 0;
-    /* Buscar el final de la línea */
-    while (store[i] && store[i] != '\n')
+    i = 0; // Inicializamos a 0 para comenzar a recorrer la cadena 'store'.
+    while (store[i] && store[i] != '\n') // Recorremos hasta encontrar '\n' o el final de la cadena.
         i++;
-    if (store[i] == '\n')
-        i++;  /* incluir '\n' en la longitud */
-    /* Reservar espacio para la línea + terminador nulo */
-    line = malloc(i + 1);
-    if (!line)
+    if (store[i] == '\n') // Si encontramos '\n', aumentamos 'i' para incluirlo en el conteo.
+        i++;
+    line = malloc(i + 1); // Reservamos memoria para la nueva cadena que vamos a devolver + el termiandor '\0'.
+    if (!line) // Manejo de errores; si la asignacion de memoria falla se retorna null.
         return (NULL);
-    /* Copiar caracteres */
-    j = 0;
-    while (j < i)
+    j = 0; // Inicializamos a 0 para comenzar a copiar caracteres.
+    while (j < i) // Copiamos 'i' caracteres de 'store' a 'line'.
     {
         line[j] = store[j];
         j++;
     }
-    line[j] = '\0';  /* cerrar cadena */
-    return (line);
+    line[j] = '\0'; // Añadimos el carácter nulo al final para cerrar correctamente la cadena.
+    return (line); // Devolvemos la variable 'line', que contiene la nueva cadena que acabamos de extraer.
 }
 
 /*
- * update_store:
- *   Después de extraer una línea, actualiza 'store' para descartar
- *   la parte ya leída.
- *   - Avanza tras el '\n' para definir el inicio del remanente.
- *   - Copia lo que queda a un nuevo buffer, libera el viejo.
- *   - Devuelve el nuevo apuntador o NULL si no queda remanente.
- */
+Update_store: Actualiza el contenido de 'store' tras extraer una línea completa.
+ - Encuentra el final de la línea (primer '\n') en 'store'.
+ - Si no hay salto de línea, libera 'store' y devuelve NULL (no queda nada).
+ - Avanza un carácter más para saltar el '\n'.
+ - Calcula cuántos caracteres restan después de ese punto.
+ - Reserva memoria para la nueva cadena con el resto del contenido.
+ - Copia carácter a carácter la parte restante.
+ - Añade el terminador '\0', libera la antigua 'store' y devuelve la nueva.
+*/
 static char	*update_store(char *store)
 {
     size_t	i;         /* posición de '\n' */
@@ -90,12 +89,11 @@ static char	*update_store(char *store)
     return (new_store);
 }
 
-/*
- * get_next_line:
- *   Lee del descriptor 'fd' hasta encontrar una línea completa o EOF.
- *   - Utiliza un buffer estático 'read_buffer' para llamadas a read().
- *   - Acumula los datos en 'store' entre llamadas.
- *   - Devuelve una línea dinámica o NULL en EOF/error.
+/* 
+Get_next_line:
+ - Lee desde el descriptor 'fd' bloque a bloque, buscando la siguiente línea.
+ - Devuelve una cadena dinámica con la línea (incluyendo '\n' si existe).
+ - Devuelve NULL al llegar al EOF o en caso de error.
  */
 char	*get_next_line(int fd)
 {
