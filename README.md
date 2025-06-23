@@ -79,18 +79,28 @@ PASOS IMPORTANTES PARA LA CORRECCION:
 - Comprobar el nombre de los archivos.
 - Comprobar el archivo .h y que está la macro BUFFER_SIZE
 - Pasar la norminette.
-- Revisar que no haya fugas de memoria. (leaks check??)
+- Compilar proyecto: gcc -Wall -Wextra -Werror -D BUFFER_SIZE=8 get_next_line.c get_next_line_utils.c main.c -o test_gnl
+- Revisar que no haya fugas de memoria: valgrind --leak-check=full --show-leak-kinds=all ./test_gnl fichero_de_prueba.txt
+
 
 PRUEBAS BÁSICAS:
 Con BUFF_SIZE fijado a 8, compile un programa de prueba que lea desde la entrada estándar usando get_next_line. Realice al menos las siguientes pruebas:
 - Leer y devolver una línea de 8 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde la entrada estándar.
+      echo -e "1234567\n" | ./test_gnl #envía 1234567\n (La izquierda y se pasa como entrada stdin a lo que esta en la derecha).
+      echo -n "1234567\n" | ./test_gnl #envía 1234567EOF
+      echo -e "1234\nwxyz\n" | ./test_gnl #envía 2 líneas 1234 y wxyz
+      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" | ./test_gnl #envía 6 (una solo es salto de línea): 1234 wxyz líneas líneas (salto) y 4.
 
 A continuación, añada un open(argv[1]) en main y realice:
 - Leer y devolver una línea de 8 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver dos líneas de 8 caracteres (incluyendo \n) desde un fichero.
 - Leer y devolver cualquier número de líneas de 8 caracteres (incluyendo \n) desde un fichero.
+      echo -e "1234567\n" > test.txt
+      ./test_gnl test.txt  
+      echo -e "1234\nwxyz\n" > test.txt
+      echo -e "1234\nwxyz\n123456789\nwxfghyfghz\n\n4" > test.txt
 
 PRUEBAS INTERMEDIAS:
 Con BUFF_SIZE fijado a 16, realice las mismas pruebas que en la sección anterior:
@@ -110,6 +120,7 @@ Con BUFF_SIZE fijado a 4, compruebe:
 - Leer y devolver dos líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver cualquier número de líneas de 4 caracteres (incluyendo \n) desde la entrada estándar.
 - Leer y devolver una línea de 4 caracteres sin \n desde un fichero.
+     Lo mismo pero es con echo -n en lugar de echo -e
 - Leer y devolver una línea de 8 caracteres sin \n desde un fichero.
 - Leer y devolver una línea de 16 caracteres sin \n desde un fichero. (Recordatorio: el fin de fichero debe comportarse como fin de línea para get_next_line.)
 - Leer y devolver una línea vacía desde un fichero.
