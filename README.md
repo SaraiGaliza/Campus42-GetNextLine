@@ -117,7 +117,7 @@ Con BUFF_SIZE fijado a 4, compruebe:
 GESTION DE ERRORES:
 Realice AL MENOS las siguientes pruebas para evaluar la gestión de errores:
 - Pasar un descriptor de archivo arbitrario a get_next_line en el que no sea posible leer (por ejemplo, 42). La función debe devolver -1.
-- Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué?
+- Fijar BUFF_SIZE a 1, 32, 9999 y luego a 10000000. Este último valor no debería funcionar (aunque no se considera un error durante la defensa). ¿Sabe alguno de los dos por qué? Si defines algo como char buf[10000000]; dentro de la función, eso ya son 10 MB en la pila y supera el límite antes incluso de empezar
 
 
 
